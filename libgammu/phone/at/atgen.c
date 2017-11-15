@@ -6190,7 +6190,6 @@ GSM_Reply_Function ATGENReplyFunctions[] = {
 {MOTOROLA_Banner,		"+MBAN:"		,0x00,0x00,ID_IncomingFrame	 },
 
 {ATGEN_GenericReply, 		"AT+VTS"		,0x00,0x00,ID_SendDTMF		 },
-{ATGEN_ReplyAnswerCall,		"ATA\r"			,0x00,0x00,ID_AnswerCall	 },
 {ATGEN_ReplyCancelCall,		"AT+CHUP"		,0x00,0x00,ID_CancelCall	 },
 {ATGEN_ReplyDialVoice,		"ATD"			,0x00,0x00,ID_DialVoice		 },
 {ATGEN_ReplyCancelCall,		"ATH"			,0x00,0x00,ID_CancelCall	 },
