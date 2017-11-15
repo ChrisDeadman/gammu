@@ -4636,16 +4636,24 @@ GSM_Error ATGEN_GetSecurityStatus(GSM_StateMachine *s, GSM_SecurityCodeType *Sta
 
 GSM_Error ATGEN_ReplyAnswerCall(GSM_Protocol_Message *msg UNUSED, GSM_StateMachine *s)
 {
+	GSM_Call call;
+
 	switch(s->Phone.Data.Priv.ATGEN.ReplyState) {
-        case AT_Reply_OK:
-		smprintf(s, "Call(s) answered\n");
-		return ERR_NONE;
-    	case AT_Reply_CMSError:
-		return ATGEN_HandleCMSError(s);
-	case AT_Reply_CMEError:
-		return ATGEN_HandleCMEError(s);
-        default:
-		return ERR_UNKNOWN;
+		case AT_Reply_OK:
+			smprintf(s, "Calls answered\n");
+			call.CallIDAvailable = FALSE;
+			call.Status = GSM_CALL_CallEstablished;
+
+			if (s->User.IncomingCall) {
+				s->User.IncomingCall(s, &call, s->User.IncomingCallUserData);
+			}
+			return ERR_NONE;
+		case AT_Reply_CMSError:
+			return ATGEN_HandleCMSError(s);
+		case AT_Reply_CMEError:
+			return ATGEN_HandleCMEError(s);
+		default:
+			return ERR_UNKNOWN;
 	}
 }
 
@@ -6186,6 +6194,7 @@ GSM_Reply_Function ATGENReplyFunctions[] = {
 {ATGEN_ReplyCancelCall,		"AT+CHUP"		,0x00,0x00,ID_CancelCall	 },
 {ATGEN_ReplyDialVoice,		"ATD"			,0x00,0x00,ID_DialVoice		 },
 {ATGEN_ReplyCancelCall,		"ATH"			,0x00,0x00,ID_CancelCall	 },
+{ATGEN_ReplyAnswerCall,		"ATA"			,0x00,0x00,ID_AnswerCall	 },
 {ATGEN_GenericReply, 		"AT+CRC"		,0x00,0x00,ID_SetIncomingCall	 },
 {ATGEN_GenericReply, 		"AT+CLIP"		,0x00,0x00,ID_SetIncomingCall	 },
 {ATGEN_GenericReply, 		"AT+CCWA"		,0x00,0x00,ID_SetIncomingCall	 },
